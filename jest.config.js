@@ -14,10 +14,10 @@ module.exports = {
   // cacheDirectory: "/tmp/jest_rs",
 
   // Automatically clear mock calls and instances between every test
-  clearMocks: true,
+  // clearMocks: false,
 
   // Indicates whether the coverage information should be collected while executing the test
-  collectCoverage: true,
+  // collectCoverage: false,
 
   // An array of glob patterns indicating a set of files for which coverage information should be collected
   // collectCoverageFrom: undefined,
@@ -81,12 +81,12 @@ module.exports = {
     "json",
     "web.jsx",
     "jsx",
-    "node",
+    "node"
   ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
   moduleNameMapper: {
-    "^.+\\.(css|sass|scss)$": "identity-obj-proxy",
+    '^.+\\.(css|sass|scss)$': 'identity-obj-proxy',
   },
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -131,10 +131,14 @@ module.exports = {
   // runner: "jest-runner",
 
   // The paths to modules that run some code to configure or set up the testing environment before each test
-  setupFiles: ["react-app-polyfill/jsdom"],
+  setupFiles: [
+    "react-app-polyfill/jsdom"
+  ],
 
   // A list of paths to modules that run some code to configure or set up the testing framework before each test
-  setupFilesAfterEnv: ["<rootDir>/config/jest/setupTests.ts"],
+  setupFilesAfterEnv: [
+    "<rootDir>/config/jest/setupTests.ts"
+  ],
 
   // The number of seconds after which a test is considered as slow and reported as such in the results.
   // slowTestThreshold: 5,
@@ -152,7 +156,9 @@ module.exports = {
   // testLocationInResults: false,
 
   // The glob patterns Jest uses to detect test files
-  testMatch: ["**/__tests__/**/?(*.)+(spec|test).[tj]s?(x)"],
+  testMatch: [
+    "**/__tests__/**/?(*.)+(spec|test).[tj]s?(x)",
+  ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
   // testPathIgnorePatterns: [
@@ -176,10 +182,8 @@ module.exports = {
 
   // A map from regular expressions to paths to transformers
   transform: {
-    "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$":
-      "<rootDir>/config/jest/transforms/babelTransform.ts",
-    "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)":
-      "<rootDir>/config/jest/transforms/fileTransform.ts",
+    "^.+\\.(js|jsx|mjs|cjs|ts|tsx)$": "<rootDir>/config/jest/transforms/babelTransform.ts",
+    "^(?!.*\\.(js|jsx|mjs|cjs|ts|tsx|css|json)$)": "<rootDir>/config/jest/transforms/fileTransform.ts"
   },
 
   // An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
