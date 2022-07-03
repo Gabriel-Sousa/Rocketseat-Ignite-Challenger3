@@ -1,13 +1,14 @@
 import React from "react";
+import { useState } from "react";
 import {
   MdDelete,
   MdAddCircleOutline,
   MdRemoveCircleOutline,
 } from "react-icons/md";
+import { toast } from "react-toastify";
 
 import { useCart } from "../../hooks/useCart";
 import { formatPrice } from "../../util/format";
-// import { formatPrice } from '../../util/format';
 import { Container, ProductTable, Total } from "./styles";
 
 interface Product {
@@ -19,32 +20,63 @@ interface Product {
 }
 
 const Cart = (): JSX.Element => {
-  const { cart, removeProduct, updateProductAmount } = useCart();
+  const { cart, removeProduct, updateProductAmount, stocks } = useCart();
 
-  // const cartFormatted = cart.map(product => ({
+  // const cartFormatted = cart.map((product) => ({
   //   // TODO
-  // }))
-  // const total =
-  //   formatPrice(
-  //     cart.reduce((sumTotal, product) => {
-  //       // TODO
-  //     }, 0)
-  //   )
+  // }));
+  const [total, setTotal] = useState<number>(() => {
+    return cart.reduce((sumTotal, product) => {
+      return sumTotal + product.price * product.amount;
+    }, 0);
+  });
 
+  function updateValue() {
+    return cart.reduce((sumTotal, product) => {
+      return sumTotal + product.price * product.amount;
+    }, 0);
+  }
   function handleProductIncrement(product: Product) {
-    // TODO
+    const stock = stocks.find((stock) => stock.id === product.id) || {
+      id: 0,
+      amount: 0,
+    };
+
+    if (product.amount < stock.amount) {
+      const incrementAmount = (product.amount += 1);
+      updateProductAmount({
+        productId: product.id,
+        amount: incrementAmount,
+      });
+    } else {
+      toast.error("Quantidade solicitada fora de estoque");
+    }
+
+    setTotal(updateValue());
   }
 
   function handleProductDecrement(product: Product) {
-    const DecrementAmount = (product.amount -= 1);
-    updateProductAmount({
-      productId: product.id,
-      amount: DecrementAmount,
-    });
+    if (product.amount > 1) {
+      const decrementAmount = (product.amount -= 1);
+      updateProductAmount({
+        productId: product.id,
+        amount: decrementAmount,
+      });
+    }
+
+    setTotal(updateValue());
   }
 
   function handleRemoveProduct(productId: number) {
-    // TODO
+    console.log(cart);
+
+    const removeProductOfCart = cart.filter(
+      (product) => product.id === productId
+    );
+
+    const minus = removeProductOfCart[0].amount * removeProductOfCart[0].price;
+    removeProduct(productId);
+    setTotal(updateValue() - minus);
   }
 
   return (
@@ -89,7 +121,7 @@ const Cart = (): JSX.Element => {
                     <button
                       type="button"
                       data-testid="increment-product"
-                      // onClick={() => handleProductIncrement()}
+                      onClick={() => handleProductIncrement(cart)}
                     >
                       <MdAddCircleOutline size={20} />
                     </button>
@@ -102,7 +134,7 @@ const Cart = (): JSX.Element => {
                   <button
                     type="button"
                     data-testid="remove-product"
-                    // onClick={() => handleRemoveProduct(product.id)}
+                    onClick={() => handleRemoveProduct(cart.id)}
                   >
                     <MdDelete size={20} />
                   </button>
@@ -115,10 +147,9 @@ const Cart = (): JSX.Element => {
 
       <footer>
         <button type="button">Finalizar pedido</button>
-
         <Total>
           <span>TOTAL</span>
-          <strong>R$ 359,80</strong>
+          <strong>{formatPrice(Number(total))}</strong>
         </Total>
       </footer>
     </Container>
